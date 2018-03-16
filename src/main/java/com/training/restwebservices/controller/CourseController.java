@@ -34,7 +34,7 @@ public class CourseController {
 		return courseDao.findById(id);
 	}
 	
-	@DeleteMapping(path="/courses/{id}")
+	@DeleteMapping(path="/delete/courses/{id}")
 	public Course removeCourseById(@PathVariable Integer id) {
 		ServletUriComponentsBuilder.fromCurrentRequest().path("{id}").buildAndExpand(id).toUri();
 		return courseDao.removeById(id);
