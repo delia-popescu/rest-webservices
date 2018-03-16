@@ -1,4 +1,4 @@
-package com.examples.rest.webservices.restfulwebservices.filtering;
+package com.training.restwebservices.filtering;
 
 import java.util.Arrays;
 import java.util.List;
