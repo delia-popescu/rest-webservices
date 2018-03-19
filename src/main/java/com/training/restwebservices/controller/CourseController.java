@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.training.restwebservices.exception.CourseNotFoundException;
 import com.training.restwebservices.model.Course;
 import com.training.restwebservices.service.CourseService;
 
@@ -31,7 +32,11 @@ public class CourseController {
 	
 	@GetMapping(path="/courses/{id}")
 	public Course getCourseById(@PathVariable Integer id) {
-		return courseDao.findById(id);
+		Course course = courseDao.findById(id);
+		if(course == null) {
+			throw new CourseNotFoundException(String.format("Course with id %s doesn't exist", id));
+		}
+		return course;
 	}
 	
 	@DeleteMapping(path="/delete/courses/{id}")

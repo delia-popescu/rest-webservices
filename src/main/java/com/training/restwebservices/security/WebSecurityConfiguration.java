@@ -16,13 +16,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		auth.inMemoryAuthentication()
 		.withUser("admin").password("{noop}admin").roles("ADMIN")
 		.and()
-		.withUser("user").password("{noop}password").roles("USER");
+		.withUser("user").password("{noop}password").roles("USER", "ACTUATOR");
 	}
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception{
 		http.csrf().disable()
 				.authorizeRequests()
+				.antMatchers("/actuator/**").permitAll()
 				.antMatchers("/courses/**").permitAll()
 				.antMatchers("/students/**").hasRole("ADMIN")
 				.and()
