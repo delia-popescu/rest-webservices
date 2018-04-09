@@ -1,13 +1,22 @@
-package com.training.restwebservices.model;
+package com.training.restwebservices.students.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+@Entity
 public class Student {
 	
+	@Id
+	@GeneratedValue
 	private Integer id;
 	
 	private String name;
 	
+	@ManyToMany
 	private List<Course> courses;
 	
 	public Student() {

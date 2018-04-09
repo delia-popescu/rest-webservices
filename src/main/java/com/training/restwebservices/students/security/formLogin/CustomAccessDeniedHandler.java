@@ -1,4 +1,4 @@
-package com.training.restwebservices.security.formLogin;
+package com.training.restwebservices.students.security.formLogin;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.training.restwebservices.controller;
+package com.training.restwebservices.students.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.training.restwebservices.exception.CourseNotFoundException;
-import com.training.restwebservices.model.Course;
-import com.training.restwebservices.service.CourseService;
+import com.training.restwebservices.students.dao.CourseJpaRepository;
+import com.training.restwebservices.students.exception.CourseNotFoundException;
+import com.training.restwebservices.students.model.Course;
 
 @RestController
 public class CourseController {
 	
 	@Autowired
-	private CourseService courseDao;
+	private CourseJpaRepository courseDao;
 
 	@GetMapping(path="/courses")
 	public List<Course> getAllCourses() {
@@ -32,7 +32,7 @@ public class CourseController {
 	
 	@GetMapping(path="/courses/{id}")
 	public Course getCourseById(@PathVariable Integer id) {
-		Course course = courseDao.findById(id);
+		Course course = courseDao.findById(id).orElse(null);
 		if(course == null) {
 			throw new CourseNotFoundException(String.format("Course with id %s doesn't exist", id));
 		}
@@ -40,14 +40,13 @@ public class CourseController {
 	}
 	
 	@DeleteMapping(path="/delete/courses/{id}")
-	public Course removeCourseById(@PathVariable Integer id) {
-		ServletUriComponentsBuilder.fromCurrentRequest().path("{id}").buildAndExpand(id).toUri();
-		return courseDao.removeById(id);
+	public void removeCourseById(@PathVariable Integer id) {
+		courseDao.deleteById(id);;
 	}
 	
 	@PostMapping(path="/courses")
 	public ResponseEntity<Course> addCourse(@Valid @RequestBody Course course) {
-		courseDao.add(course);
+		courseDao.save(course);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(course.getId()).toUri();
 		return ResponseEntity.created(location).build();
 	}

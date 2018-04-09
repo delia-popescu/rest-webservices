@@ -1,4 +1,4 @@
-package com.training.restwebservices.security;
+package com.training.restwebservices.students.security;
 
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

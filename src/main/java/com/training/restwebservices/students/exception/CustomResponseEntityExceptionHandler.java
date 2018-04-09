@@ -1,4 +1,4 @@
-package com.training.restwebservices.exception;
+package com.training.restwebservices.students.exception;
 
 import java.util.Date;
 

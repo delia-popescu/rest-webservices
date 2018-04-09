@@ -1,4 +1,4 @@
-package com.training.restwebservices.controller;
+package com.training.restwebservices.students.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.training.restwebservices.exception.StudentNotFoundException;
-import com.training.restwebservices.model.Course;
-import com.training.restwebservices.model.Student;
-import com.training.restwebservices.service.StudentService;
+import com.training.restwebservices.students.dao.StudentJpaRepository;
+import com.training.restwebservices.students.exception.StudentNotFoundException;
+import com.training.restwebservices.students.model.Course;
+import com.training.restwebservices.students.model.Student;
 
 @PreAuthorize("hasRole(ADMIN)")
 @RestController
 public class StudentController {
 
 	@Autowired
-	private StudentService studentDao;
+	private StudentJpaRepository studentDao;
 
 	@GetMapping(path = "/students")
 	public List<Student> getAllStudents() {
@@ -36,7 +36,7 @@ public class StudentController {
 	//HATEAOAS endpoint
 	@GetMapping(path = "/students/{id}")
 	public Resource<Student> getStudentById(@PathVariable int id) {
-		Student student = studentDao.findById(id);
+		Student student = studentDao.findById(id).orElse(null);
 		if (student == null) {
 			throw new StudentNotFoundException(String.format("Student with id %d doesn't exist", id));
 		}
@@ -51,14 +51,14 @@ public class StudentController {
 				.withRel("all-students");
 		Link allStudentCourseLink = ControllerLinkBuilder.linkTo(ControllerLinkBuilder
 				.methodOn(StudentController.class, student.getId()).getStudentCourses(student.getId()))
-				.withRel("all-user-posts");
+				.withRel("all-student-courses");
 		resource.add(allStudentsLink, allStudentCourseLink);
 		return resource;
 	}
 
 	@PostMapping(path = "/students")
 	public ResponseEntity<Student> addStudent(@RequestBody Student student) {
-		studentDao.add(student);
+		studentDao.save(student);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(student.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
@@ -66,7 +66,7 @@ public class StudentController {
 
 	@GetMapping(path = "/students/{id}/courses")
 	public List<Course> getStudentCourses(@PathVariable int id) {
-		Student student = studentDao.findById(id);
+		Student student = studentDao.findById(id).orElse(null);
 		if (student == null) {
 			throw new StudentNotFoundException(String.format("Student with id %d doesn't exist", id));
 		}
@@ -75,7 +75,7 @@ public class StudentController {
 
 	@GetMapping(path = "/students/{id}/courses/{courseId}")
 	public Course getStudentCourse(@PathVariable int id, @PathVariable int courseId) {
-		Student student = studentDao.findById(id);
+		Student student = studentDao.findById(id).orElse(null);
 		if (student != null) {
 			return student.getCourses().stream().filter(course -> course.getId() == courseId).findFirst().orElse(null);
 		}

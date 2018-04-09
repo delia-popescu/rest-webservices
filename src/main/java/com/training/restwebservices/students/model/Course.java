@@ -1,9 +1,15 @@
-package com.training.restwebservices.model;
+package com.training.restwebservices.students.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Positive;
 
+@Entity
 public class Course {
 	
+	@Id
+	@GeneratedValue
 	@Positive
 	private Integer id;
 	

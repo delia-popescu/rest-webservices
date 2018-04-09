@@ -1,4 +1,4 @@
-package com.training.restwebservices.exception;
+package com.training.restwebservices.students.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
